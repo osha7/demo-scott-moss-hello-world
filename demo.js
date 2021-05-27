@@ -12,8 +12,19 @@ const typeDefs = gql`
         friends: [User]!
     }
 
+    type Shoe {
+        brand: String!
+        size: Int!
+    }
+
+    input ShoesInput {
+        brand: String
+        size: Int
+    }
+
     type Query {
         me: User!
+        shoes(input: ShoesInput): [Shoe]
     }
 
 `
@@ -37,6 +48,14 @@ const typeDefs = gql`
     // it's job is to return something that looks exactly like what the typeDef looks like
 const resolvers = {
     Query: {
+        shoes(_, {input}) {
+            return [
+                {brand: 'nike', size: 12},
+                {brand: 'reebok', size: 14}
+            ].filter(shoe => {
+                return shoe.brand === input.brand
+            })
+        },
         me() {
             return {
                 email: 'yoda@master.com',
@@ -70,4 +89,3 @@ server.listen(4000)
     // graphql playground -> to explore graphql api
     // docs: show you all the queries that you're capable of doing
     // schema: shows you the schema plus what apollo is doing for you
-    
